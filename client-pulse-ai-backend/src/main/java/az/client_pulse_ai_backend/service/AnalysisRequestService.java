@@ -1,5 +1,6 @@
 package az.client_pulse_ai_backend.service;
 
+import az.client_pulse_ai_backend.dto.AnalysisFilter;
 import az.client_pulse_ai_backend.dto.AnalysisRequestDetailResponse;
 import az.client_pulse_ai_backend.dto.AnalysisRequestSummaryResponse;
 import az.client_pulse_ai_backend.dto.AnalysisStatisticsResponse;
@@ -7,6 +8,7 @@ import az.client_pulse_ai_backend.dto.ScoreCount;
 import az.client_pulse_ai_backend.dto.ScoreRangeStatistics;
 import az.client_pulse_ai_backend.dto.StatusCount;
 import az.client_pulse_ai_backend.entity.AnalysisStatus;
+import az.client_pulse_ai_backend.entity.Channel;
 import az.client_pulse_ai_backend.exception.ResourceNotFoundException;
 import az.client_pulse_ai_backend.repository.AnalysisRequestRepository;
 import lombok.RequiredArgsConstructor;
@@ -15,8 +17,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -31,8 +35,9 @@ public class AnalysisRequestService {
 
 	private final AnalysisRequestRepository analysisRequestRepository;
 
-	public Page<AnalysisRequestSummaryResponse> findAll(Pageable pageable) {
-		return analysisRequestRepository.findAll(pageable).map(AnalysisRequestSummaryResponse::from);
+	public Page<AnalysisRequestSummaryResponse> findAll(AnalysisFilter filter, Pageable pageable) {
+		return analysisRequestRepository.findAllMatching(filter.fromOrMin(), filter.toOrMax(), filter.channels(), pageable)
+				.map(AnalysisRequestSummaryResponse::from);
 	}
 
 	public AnalysisRequestDetailResponse findById(Long id) {
@@ -41,8 +46,11 @@ public class AnalysisRequestService {
 				.orElseThrow(() -> new ResourceNotFoundException("Analysis request not found: " + id));
 	}
 
-	public AnalysisStatisticsResponse getStatistics() {
-		Map<AnalysisStatus, Long> statusCounts = analysisRequestRepository.countByStatus().stream()
+	public AnalysisStatisticsResponse getStatistics(AnalysisFilter filter) {
+		Instant from = filter.fromOrMin();
+		Instant to = filter.toOrMax();
+		Set<Channel> channels = filter.channels();
+		Map<AnalysisStatus, Long> statusCounts = analysisRequestRepository.countByStatus(from, to, channels).stream()
 				.collect(Collectors.toMap(StatusCount::status, StatusCount::count));
 		long pending = statusCounts.getOrDefault(AnalysisStatus.PENDING, 0L);
 		long completed = statusCounts.getOrDefault(AnalysisStatus.COMPLETED, 0L);
@@ -53,9 +61,10 @@ public class AnalysisRequestService {
 				pending,
 				completed,
 				failed,
-				analysisRequestRepository.findAverageScore(),
-				analysisRequestRepository.findDailyStatistics(),
-				toScoreDistribution(analysisRequestRepository.countByScore())
+				analysisRequestRepository.findAverageScore(from, to, channels),
+				analysisRequestRepository.findDailyStatistics(from, to, channels),
+				analysisRequestRepository.findChannelStatistics(from, to, channels),
+				toScoreDistribution(analysisRequestRepository.countByScore(from, to, channels))
 		);
 	}
 

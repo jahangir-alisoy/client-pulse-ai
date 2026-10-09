@@ -4,7 +4,9 @@ import { useLocation, useNavigate, useParams } from 'react-router'
 import { analysisApi } from '../../api/endpoints'
 import type { AnalysisRequestDetail } from '../../api/types'
 import { Drawer } from '../../components/Drawer'
+import { ChannelBadge } from '../../components/ChannelBadge'
 import { ErrorNotice } from '../../components/Notice'
+import { CustomerInfo, SupportAgentInfo } from '../../components/People'
 import { StatusBadge } from '../../components/StatusBadge'
 import { formatDateTime, shortId } from '../../lib/format'
 import { usePolling } from '../../lib/usePolling'
@@ -52,6 +54,18 @@ function RequestDetail({ request }: { request: AnalysisRequestDetail }) {
           </div>
         </div>
         <div className={styles.summaryCell}>
+          <span className={styles.summaryLabel}>Channel</span>
+          <ChannelBadge channel={request.channel} />
+        </div>
+        <div className={styles.summaryCell}>
+          <span className={styles.summaryLabel}>Customer</span>
+          <CustomerInfo customer={request.customer} />
+        </div>
+        <div className={styles.summaryCell}>
+          <span className={styles.summaryLabel}>Support assistant</span>
+          <SupportAgentInfo supportAgent={request.supportAgent} />
+        </div>
+        <div className={styles.summaryCell}>
           <span className={styles.summaryLabel}>Session</span>
           <span className="mono" title={request.sessionId}>
             {shortId(request.sessionId)}
@@ -83,7 +97,9 @@ function RequestDetail({ request }: { request: AnalysisRequestDetail }) {
         <div className={styles.transcript}>
           {request.messages.map((message, index) => (
             <div key={index} className={`${styles.message} ${message.role === 'USER' ? styles.messageClient : ''}`}>
-              <span className={styles.role}>{message.role === 'USER' ? 'Client' : 'Assistant'}</span>
+              <span className={styles.role}>
+                {message.role === 'USER' ? request.customer?.fullName ?? 'Client' : request.supportAgent?.fullName ?? 'Assistant'}
+              </span>
               <span className={styles.content}>{message.content}</span>
             </div>
           ))}

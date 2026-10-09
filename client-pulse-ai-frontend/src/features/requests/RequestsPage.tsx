@@ -1,15 +1,19 @@
 import { ChevronLeft, ChevronRight, RefreshCw } from 'lucide-react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link, Outlet, useNavigate } from 'react-router'
 import { analysisApi } from '../../api/endpoints'
 import type { AnalysisRequestSummary, Page } from '../../api/types'
 import { Button, ButtonLink } from '../../components/Button'
 import { Card } from '../../components/Card'
+import { ChannelBadge } from '../../components/ChannelBadge'
 import { ErrorNotice } from '../../components/Notice'
+import { CustomerInfo, SupportAgentInfo } from '../../components/People'
+import { useAnalysisFilter } from '../../filters/AnalysisFilterContext'
+import { FilterBar } from '../../filters/FilterBar'
 import { PageHeader } from '../../components/PageHeader'
 import { ScoreMeter } from '../../components/ScoreMeter'
 import { StatusBadge } from '../../components/StatusBadge'
-import { formatCount, formatDateTime, shortId } from '../../lib/format'
+import { formatCount, formatDateTime } from '../../lib/format'
 import { usePolling } from '../../lib/usePolling'
 import { useResource } from '../../lib/useResource'
 import styles from './Requests.module.css'
@@ -17,9 +21,14 @@ import styles from './Requests.module.css'
 const PAGE_SIZES = [10, 20, 50]
 
 export function RequestsPage() {
+  const { query } = useAnalysisFilter()
   const [page, setPage] = useState(0)
   const [size, setSize] = useState(20)
-  const requests = useResource(() => analysisApi.list(page, size), [page, size])
+  const requests = useResource(() => analysisApi.list(page, size, query), [page, size, query])
+
+  useEffect(() => {
+    setPage(0)
+  }, [query])
   const hasPending = requests.data?.content.some((request) => request.status === 'PENDING') ?? false
   usePolling(requests.refresh, 3000, hasPending)
 
@@ -43,6 +52,7 @@ export function RequestsPage() {
           </>
         }
       />
+      <FilterBar />
       {requests.error && <ErrorNotice message={requests.error} className={styles.error} />}
       {!requests.data && !requests.error && <p className={styles.loading}>Loading…</p>}
       {requests.data &&
@@ -84,7 +94,9 @@ function RequestsTable({ data, dimmed, onPageChange, onSizeChange }: RequestsTab
           <thead>
             <tr>
               <th scope="col">Request</th>
-              <th scope="col">Session</th>
+              <th scope="col">Channel</th>
+              <th scope="col">Customer</th>
+              <th scope="col">Support assistant</th>
               <th scope="col">Status</th>
               <th scope="col">Score</th>
               <th scope="col">Assessment</th>
@@ -99,8 +111,14 @@ function RequestsTable({ data, dimmed, onPageChange, onSizeChange }: RequestsTab
                     #{request.id}
                   </Link>
                 </td>
-                <td className={`${styles.secondary} mono`} title={request.sessionId}>
-                  {shortId(request.sessionId)}
+                <td>
+                  <ChannelBadge channel={request.channel} />
+                </td>
+                <td className={styles.person}>
+                  <CustomerInfo customer={request.customer} />
+                </td>
+                <td className={styles.person}>
+                  <SupportAgentInfo supportAgent={request.supportAgent} />
                 </td>
                 <td>
                   <StatusBadge status={request.status} />
@@ -157,7 +175,7 @@ function EmptyRequests() {
   return (
     <Card className={styles.empty}>
       <h2 className={styles.emptyTitle}>No requests yet</h2>
-      <p className={styles.emptyText}>Conversations from Simulation appear here as soon as they are sent to Client Pulse.</p>
+      <p className={styles.emptyText}>Nothing matches the current filters. Conversations from Simulation appear here as soon as they are sent to Client Pulse.</p>
       <ButtonLink to="/simulation" variant="primary">
         Open simulation
       </ButtonLink>

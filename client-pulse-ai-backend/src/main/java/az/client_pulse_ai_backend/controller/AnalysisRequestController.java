@@ -1,5 +1,6 @@
 package az.client_pulse_ai_backend.controller;
 
+import az.client_pulse_ai_backend.dto.AnalysisFilter;
 import az.client_pulse_ai_backend.dto.AnalysisRequestDetailResponse;
 import az.client_pulse_ai_backend.dto.AnalysisRequestSummaryResponse;
 import az.client_pulse_ai_backend.dto.AnalysisStatisticsResponse;
@@ -22,9 +23,9 @@ public class AnalysisRequestController {
 	private final AnalysisRequestService analysisRequestService;
 
 	@GetMapping
-	public PagedModel<AnalysisRequestSummaryResponse> findAll(
+	public PagedModel<AnalysisRequestSummaryResponse> findAll(AnalysisFilter filter,
 			@PageableDefault(sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
-		return new PagedModel<>(analysisRequestService.findAll(pageable));
+		return new PagedModel<>(analysisRequestService.findAll(filter, pageable));
 	}
 
 	@GetMapping("/{id}")
@@ -33,8 +34,8 @@ public class AnalysisRequestController {
 	}
 
 	@GetMapping("/statistics")
-	public AnalysisStatisticsResponse getStatistics() {
-		return analysisRequestService.getStatistics();
+	public AnalysisStatisticsResponse getStatistics(AnalysisFilter filter) {
+		return analysisRequestService.getStatistics(filter);
 	}
 
 }

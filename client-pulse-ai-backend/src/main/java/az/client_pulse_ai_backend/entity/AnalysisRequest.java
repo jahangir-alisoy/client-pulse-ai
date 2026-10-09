@@ -6,15 +6,18 @@ import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OrderColumn;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.Instant;
@@ -34,6 +37,19 @@ public class AnalysisRequest {
 
 	@Column(nullable = false)
 	private UUID sessionId;
+
+	@Enumerated(EnumType.STRING)
+	@ColumnDefault("'CHAT'")
+	@Column(nullable = false)
+	private Channel channel;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "customer_id")
+	private Customer customer;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "support_agent_id")
+	private SupportAgent supportAgent;
 
 	@ElementCollection
 	@CollectionTable(name = "analysis_request_messages", joinColumns = @JoinColumn(name = "analysis_request_id"))
@@ -58,8 +74,11 @@ public class AnalysisRequest {
 
 	private Instant analyzedAt;
 
-	public AnalysisRequest(UUID sessionId, List<AnalysisMessage> messages) {
+	public AnalysisRequest(UUID sessionId, Channel channel, Customer customer, SupportAgent supportAgent, List<AnalysisMessage> messages) {
 		this.sessionId = sessionId;
+		this.channel = channel;
+		this.customer = customer;
+		this.supportAgent = supportAgent;
 		this.messages = new ArrayList<>(messages);
 		this.status = AnalysisStatus.PENDING;
 	}

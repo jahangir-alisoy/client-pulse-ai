@@ -4,11 +4,13 @@ import type { Turn } from './useSimulationSession'
 import styles from './Simulation.module.css'
 
 type ConversationProps = {
+  customerName: string
+  assistantName: string
   turns: Turn[]
   replying: boolean
 }
 
-export function Conversation({ turns, replying }: ConversationProps) {
+export function Conversation({ customerName, assistantName, turns, replying }: ConversationProps) {
   const container = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -29,14 +31,14 @@ export function Conversation({ turns, replying }: ConversationProps) {
           {turns.map((turn, index) => (
             <div key={index} className={`${styles.turn} ${turn.role === 'USER' ? styles.turnUser : ''}`}>
               <span className={styles.turnMeta}>
-                {turn.role === 'USER' ? 'Client' : 'Assistant'} · {formatTime(turn.sentAt)}
+                {turn.role === 'USER' ? customerName : assistantName} · {formatTime(turn.sentAt)}
               </span>
               <div className={styles.bubble}>{turn.content}</div>
             </div>
           ))}
           {replying && (
             <div className={styles.turn}>
-              <span className={styles.turnMeta}>Assistant</span>
+              <span className={styles.turnMeta}>{assistantName}</span>
               <span className={styles.replying} aria-label="Assistant is replying">
                 <span />
                 <span />

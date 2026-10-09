@@ -1,0 +1,80 @@
+.wrapper {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  max-width: 100%;
+}
+
+.name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.trigger {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border: 0;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--text-muted);
+}
+
+.trigger:hover,
+.open {
+  background: var(--surface-hover);
+  color: var(--text);
+}
+
+.popover {
+  position: fixed;
+  z-index: 50;
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: var(--shadow-overlay);
+  cursor: default;
+  white-space: normal;
+}
+
+.title {
+  font-size: 13.5px;
+  font-weight: 600;
+}
+
+.kind {
+  margin-top: 1px;
+  color: var(--text-secondary);
+  font-size: 12px;
+}
+
+.list {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 4px 12px;
+  margin: 10px 0 0;
+  font-size: 12.5px;
+}
+
+.row {
+  display: contents;
+}
+
+.list dt {
+  color: var(--text-secondary);
+}
+
+.list dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.empty {
+  color: var(--text-muted);
+}

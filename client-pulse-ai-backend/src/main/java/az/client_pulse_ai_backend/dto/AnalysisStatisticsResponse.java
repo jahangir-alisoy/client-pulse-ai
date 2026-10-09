@@ -9,6 +9,7 @@ public record AnalysisStatisticsResponse(
 		long failedRequests,
 		Double averageScore,
 		List<DailyStatistics> dailyStatistics,
+		List<ChannelStatistics> channelStatistics,
 		List<ScoreRangeStatistics> scoreDistribution
 ) {
 }

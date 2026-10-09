@@ -1,13 +1,26 @@
 import { apiRequest } from './client'
 import type {
+  AnalysisQuery,
   AnalysisRequestDetail,
   AnalysisRequestSummary,
   AnalysisStatistics,
+  Customer,
   Page,
   SimulationChatRequest,
   SimulationChatResponse,
+  SupportAgent,
   TokenResponse,
 } from './types'
+
+function toSearchParams(query: AnalysisQuery, extra: Record<string, string> = {}): string {
+  const params = new URLSearchParams(extra)
+  Object.entries(query).forEach(([key, value]) => {
+    if (value) {
+      params.set(key, value)
+    }
+  })
+  return params.toString()
+}
 
 export const authApi = {
   login: (username: string, password: string) =>
@@ -23,9 +36,17 @@ export const simulationApi = {
     apiRequest<SimulationChatResponse>('/simulation/chat', { method: 'POST', body: request }),
 }
 
+export const directoryApi = {
+  customers: () => apiRequest<Customer[]>('/customers'),
+  supportAgents: () => apiRequest<SupportAgent[]>('/support-agents'),
+}
+
 export const analysisApi = {
-  list: (page: number, size: number) =>
-    apiRequest<Page<AnalysisRequestSummary>>(`/analysis-requests?page=${page}&size=${size}&sort=createdAt,desc`),
+  list: (page: number, size: number, query: AnalysisQuery = {}) =>
+    apiRequest<Page<AnalysisRequestSummary>>(
+      `/analysis-requests?${toSearchParams(query, { page: String(page), size: String(size), sort: 'createdAt,desc' })}`,
+    ),
   get: (id: number) => apiRequest<AnalysisRequestDetail>(`/analysis-requests/${id}`),
-  statistics: () => apiRequest<AnalysisStatistics>('/analysis-requests/statistics'),
+  statistics: (query: AnalysisQuery = {}) =>
+    apiRequest<AnalysisStatistics>(`/analysis-requests/statistics?${toSearchParams(query)}`),
 }

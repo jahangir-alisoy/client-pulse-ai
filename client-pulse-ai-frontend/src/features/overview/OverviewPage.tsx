@@ -7,7 +7,10 @@ import { ColumnChart } from '../../charts/ColumnChart'
 import { LineChart } from '../../charts/LineChart'
 import { Button, ButtonLink } from '../../components/Button'
 import { Card } from '../../components/Card'
+import { CHANNEL_LABELS } from '../../components/ChannelBadge'
 import { ErrorNotice } from '../../components/Notice'
+import { useAnalysisFilter } from '../../filters/AnalysisFilterContext'
+import { FilterBar } from '../../filters/FilterBar'
 import { PageHeader } from '../../components/PageHeader'
 import { formatCount, formatDay, formatScore } from '../../lib/format'
 import { usePolling } from '../../lib/usePolling'
@@ -18,7 +21,8 @@ import styles from './OverviewPage.module.css'
 const SCORE_TICKS = [0, 25, 50, 75, 100]
 
 export function OverviewPage() {
-  const statistics = useResource(() => analysisApi.statistics(), [])
+  const { query } = useAnalysisFilter()
+  const statistics = useResource(() => analysisApi.statistics(query), [query])
   const data = statistics.data
   usePolling(statistics.refresh, 4000, (data?.pendingRequests ?? 0) > 0)
 
@@ -34,9 +38,10 @@ export function OverviewPage() {
           </Button>
         }
       />
+      <FilterBar />
       {statistics.error && <ErrorNotice message={statistics.error} />}
       {!data && !statistics.error && <p className={styles.loading}>Loading…</p>}
-      {data && (data.totalRequests === 0 ? <EmptyOverview /> : <Dashboard data={data} refreshing={statistics.loading} />)}
+      {data && (data.totalRequests === 0 ? <EmptyOverview filtered={query.from !== undefined || query.channel !== undefined} /> : <Dashboard data={data} refreshing={statistics.loading} />)}
     </>
   )
 }
@@ -45,6 +50,12 @@ function Dashboard({ data, refreshing }: { data: AnalysisStatistics; refreshing:
   const days = fillMissingDays(data.dailyStatistics)
   const requestsPerDay = days.map((day) => ({ key: day.date, label: formatDay(day.date), value: day.requestCount }))
   const scorePerDay = days.map((day) => ({ key: day.date, label: formatDay(day.date), value: day.averageScore }))
+  const byChannel = data.channelStatistics.map((entry) => ({
+    key: entry.channel,
+    label: CHANNEL_LABELS[entry.channel],
+    count: entry.requestCount,
+    averageScore: entry.averageScore,
+  }))
   const distribution = data.scoreDistribution.map((range) => ({
     key: String(range.from),
     label: `${range.from}–${range.to}`,
@@ -102,6 +113,36 @@ function Dashboard({ data, refreshing }: { data: AnalysisStatistics; refreshing:
         >
           <ColumnChart data={distribution} unit="conversations" ariaLabel="Score distribution" />
         </ChartCard>
+        <ChartCard
+          title="Requests by channel"
+          description="Conversations received per channel"
+          columns={['Channel', 'Requests']}
+          rows={byChannel.map((entry) => [entry.label, formatCount(entry.count)])}
+          dimmed={refreshing}
+        >
+          <ColumnChart
+            data={byChannel.map((entry) => ({ key: entry.key, label: entry.label, value: entry.count }))}
+            unit="requests"
+            ariaLabel="Requests by channel"
+          />
+        </ChartCard>
+        <ChartCard
+          title="Average score by channel"
+          description="Mean satisfaction score per channel"
+          columns={['Channel', 'Average score']}
+          rows={byChannel.map((entry) => [entry.label, formatScore(entry.averageScore)])}
+          dimmed={refreshing}
+        >
+          <ColumnChart
+            data={byChannel.map((entry) => ({
+              key: entry.key,
+              label: entry.label,
+              value: entry.averageScore === null ? null : Math.round(entry.averageScore * 10) / 10,
+            }))}
+            unit="average score"
+            ariaLabel="Average score by channel"
+          />
+        </ChartCard>
         <div className={styles.wide}>
           <ChartCard
             title="Average score per day"
@@ -130,7 +171,15 @@ function Stat({ label, value, icon }: { label: string; value: number; icon?: Rea
   )
 }
 
-function EmptyOverview() {
+function EmptyOverview({ filtered }: { filtered: boolean }) {
+  if (filtered) {
+    return (
+      <Card className={styles.empty}>
+        <h2 className={styles.emptyTitle}>No conversations match these filters</h2>
+        <p className={styles.emptyText}>Try a wider date range or another channel.</p>
+      </Card>
+    )
+  }
   return (
     <Card className={styles.empty}>
       <h2 className={styles.emptyTitle}>No conversations scored yet</h2>

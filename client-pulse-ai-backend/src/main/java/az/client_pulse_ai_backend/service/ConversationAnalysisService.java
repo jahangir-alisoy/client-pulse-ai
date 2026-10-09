@@ -12,7 +12,6 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.UUID;
 
 @Slf4j
 @Service
@@ -23,8 +22,13 @@ public class ConversationAnalysisService {
 	private final ConversationScorer conversationScorer;
 
 	@Async
-	public void analyze(UUID sessionId, List<ChatMessage> conversation) {
-		AnalysisRequest analysisRequest = analysisRequestRepository.save(new AnalysisRequest(sessionId, toAnalysisMessages(conversation)));
+	public void analyze(AnalysisContext context, List<ChatMessage> conversation) {
+		AnalysisRequest analysisRequest = analysisRequestRepository.save(new AnalysisRequest(
+				context.sessionId(),
+				context.channel(),
+				context.customer(),
+				context.supportAgent(),
+				toAnalysisMessages(conversation)));
 		try {
 			ConversationScore conversationScore = conversationScorer.score(conversation);
 			analysisRequest.complete(conversationScore.score(), conversationScore.description());
