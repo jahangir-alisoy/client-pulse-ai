@@ -1,0 +1,17 @@
+.notice {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--text);
+  font-size: 13px;
+}
+
+.icon {
+  flex: none;
+  margin-top: 2px;
+  color: var(--status-critical);
+}

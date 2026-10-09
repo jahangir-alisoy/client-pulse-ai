@@ -1,0 +1,51 @@
+import { useEffect, useRef } from 'react'
+import { formatTime } from '../../lib/format'
+import type { Turn } from './useSimulationSession'
+import styles from './Simulation.module.css'
+
+type ConversationProps = {
+  turns: Turn[]
+  replying: boolean
+}
+
+export function Conversation({ turns, replying }: ConversationProps) {
+  const container = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    container.current?.scrollTo({ top: container.current.scrollHeight })
+  }, [turns.length, replying])
+
+  return (
+    <div ref={container} className={styles.messages} aria-live="polite">
+      {turns.length === 0 && !replying ? (
+        <div className={styles.intro}>
+          <h2 className={styles.introTitle}>Simulate a client conversation</h2>
+          <p className={styles.introText}>
+            Write as a client would. The assistant answers right away, and each turn is sent to Client Pulse to be scored in the background.
+          </p>
+        </div>
+      ) : (
+        <>
+          {turns.map((turn, index) => (
+            <div key={index} className={`${styles.turn} ${turn.role === 'USER' ? styles.turnUser : ''}`}>
+              <span className={styles.turnMeta}>
+                {turn.role === 'USER' ? 'Client' : 'Assistant'} · {formatTime(turn.sentAt)}
+              </span>
+              <div className={styles.bubble}>{turn.content}</div>
+            </div>
+          ))}
+          {replying && (
+            <div className={styles.turn}>
+              <span className={styles.turnMeta}>Assistant</span>
+              <span className={styles.replying} aria-label="Assistant is replying">
+                <span />
+                <span />
+                <span />
+              </span>
+            </div>
+          )}
+        </>
+      )}
+    </div>
+  )
+}
