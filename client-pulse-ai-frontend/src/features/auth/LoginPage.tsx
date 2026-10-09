@@ -1,4 +1,4 @@
-import { BellRing, Gauge, KeyRound } from 'lucide-react'
+import { BellRing, Gauge, KeyRound, UserCheck } from 'lucide-react'
 import { useState, type FormEvent } from 'react'
 import { Navigate, useLocation, useNavigate } from 'react-router'
 import { ApiError } from '../../api/client'
@@ -11,6 +11,9 @@ import { ErrorNotice } from '../../components/Notice'
 import { ThemeSwitch } from '../../components/ThemeSwitch'
 import styles from './LoginPage.module.css'
 
+const DEMO_USERNAME = 'admin'
+const DEMO_PASSWORD = 'admin'
+
 const HIGHLIGHTS = [
   { Icon: Gauge, text: 'Every conversation turn is scored in the background' },
   { Icon: BellRing, text: 'Email alerts for conversations that score below 20' },
@@ -21,8 +24,8 @@ export function LoginPage() {
   const { isAuthenticated, login } = useAuth()
   const navigate = useNavigate()
   const location = useLocation()
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
+  const [username, setUsername] = useState(DEMO_USERNAME)
+  const [password, setPassword] = useState(DEMO_PASSWORD)
   const [error, setError] = useState<string | null>(null)
   const [submitting, setSubmitting] = useState(false)
   const from = (location.state as { from?: string } | null)?.from ?? '/overview'
@@ -75,6 +78,17 @@ export function LoginPage() {
           <Card className={styles.card}>
             <h1 className={styles.title}>Sign in</h1>
             <p className={styles.subtitle}>Use your console account to continue.</p>
+            <div className={styles.demo} role="note" aria-label="Demo credentials">
+              <UserCheck size={16} strokeWidth={1.75} className={styles.demoIcon} aria-hidden="true" />
+              <div className={styles.demoBody}>
+                <p className={styles.demoTitle}>Demo account for judges</p>
+                <p className={styles.demoText}>
+                  Username <code className={styles.demoValue}>{DEMO_USERNAME}</code> · Password{' '}
+                  <code className={styles.demoValue}>{DEMO_PASSWORD}</code>
+                </p>
+                <p className={styles.demoHint}>Already filled in below. Just press Sign in.</p>
+              </div>
+            </div>
             <form className={styles.form} onSubmit={handleSubmit}>
               <Field label="Username">
                 <Input
