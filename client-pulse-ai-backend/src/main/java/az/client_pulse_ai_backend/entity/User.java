@@ -9,6 +9,7 @@ import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 
 @Entity
 @Table(name = "users")
@@ -25,5 +26,21 @@ public class User {
 
 	@Column(nullable = false)
 	private String password;
+
+	@ColumnDefault("false")
+	@Column(nullable = false)
+	private boolean apiKeyProvisioned;
+
+	public void changeUsername(String username) {
+		this.username = username;
+	}
+
+	public void changePassword(String encodedPassword) {
+		this.password = encodedPassword;
+	}
+
+	public void markApiKeyProvisioned() {
+		this.apiKeyProvisioned = true;
+	}
 
 }

@@ -1,0 +1,144 @@
+.viewport {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 80;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+  width: min(380px, calc(100vw - 40px));
+  pointer-events: none;
+}
+
+.toast {
+  --tone: var(--tone-info);
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  width: 100%;
+  padding: 12px 10px 12px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: var(--shadow-overlay);
+  pointer-events: auto;
+  animation: enter 220ms var(--ease-out);
+}
+
+.success {
+  --tone: var(--tone-success);
+}
+
+.error {
+  --tone: var(--tone-error);
+}
+
+.warning {
+  --tone: var(--tone-warning);
+}
+
+.info {
+  --tone: var(--tone-info);
+}
+
+.leaving {
+  animation: leave 160ms ease forwards;
+}
+
+.icon {
+  flex: none;
+  margin-top: 2px;
+  color: var(--tone);
+}
+
+.body {
+  flex: 1;
+  min-width: 0;
+}
+
+.title {
+  font-size: 13.5px;
+  font-weight: 600;
+  line-height: 1.45;
+}
+
+.description {
+  margin-top: 2px;
+  color: var(--text-secondary);
+  font-size: 13px;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+
+.dismiss {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  margin: -4px 0 -4px 0;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--text-muted);
+}
+
+.dismiss:hover {
+  background: var(--surface-hover);
+  color: var(--text);
+}
+
+@keyframes enter {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+  }
+}
+
+@keyframes leave {
+  to {
+    opacity: 0;
+    transform: translateY(4px) scale(0.98);
+  }
+}
+
+@media (max-width: 767px) {
+  .viewport {
+    top: calc(env(safe-area-inset-top) + 8px);
+    right: 8px;
+    bottom: auto;
+    left: 8px;
+    flex-direction: column-reverse;
+    width: auto;
+  }
+
+  .dismiss {
+    width: 36px;
+    height: 36px;
+    margin: -8px -2px -8px 0;
+  }
+
+  .toast {
+    animation-name: enterFromTop;
+  }
+
+  .leaving {
+    animation-name: leaveToTop;
+  }
+}
+
+@keyframes enterFromTop {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+}
+
+@keyframes leaveToTop {
+  to {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+}

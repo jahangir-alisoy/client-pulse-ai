@@ -39,3 +39,32 @@ export function formatScore(value: number | null): string {
 export function shortId(uuid: string): string {
   return uuid.slice(0, 8)
 }
+
+const dateFormat = new Intl.DateTimeFormat(undefined, { year: 'numeric', month: 'short', day: 'numeric' })
+
+const relativeFormat = new Intl.RelativeTimeFormat(undefined, { numeric: 'auto' })
+
+const RELATIVE_UNITS: [Intl.RelativeTimeFormatUnit, number][] = [
+  ['minute', 60],
+  ['hour', 24],
+  ['day', 30],
+]
+
+export function formatDate(iso: string | null): string {
+  return iso ? dateFormat.format(new Date(iso)) : '—'
+}
+
+export function formatRelative(iso: string): string {
+  const elapsedSeconds = (new Date(iso).getTime() - Date.now()) / 1000
+  if (Math.abs(elapsedSeconds) < 60) {
+    return 'just now'
+  }
+  let value = elapsedSeconds / 60
+  for (const [unit, unitsPerNext] of RELATIVE_UNITS) {
+    if (Math.abs(value) < unitsPerNext) {
+      return relativeFormat.format(Math.round(value), unit)
+    }
+    value /= unitsPerNext
+  }
+  return formatDate(iso)
+}

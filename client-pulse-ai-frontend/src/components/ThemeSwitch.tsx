@@ -8,11 +8,15 @@ const OPTIONS: { value: ThemePreference; label: string; Icon: typeof Sun }[] = [
   { value: 'dark', label: 'Dark theme', Icon: Moon },
 ]
 
-export function ThemeSwitch() {
+type ThemeSwitchProps = {
+  className?: string
+}
+
+export function ThemeSwitch({ className }: ThemeSwitchProps) {
   const { preference, setPreference } = useTheme()
 
   return (
-    <div className={styles.switch} role="radiogroup" aria-label="Theme">
+    <div className={`${styles.switch} ${className ?? ''}`} role="radiogroup" aria-label="Theme">
       {OPTIONS.map(({ value, label, Icon }) => (
         <button
           key={value}

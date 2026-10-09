@@ -1,6 +1,11 @@
 import { useEffect, useState } from 'react'
-import { analysisApi, directoryApi, simulationApi } from '../../api/endpoints'
+import { analysisApi, apiKeysApi, directoryApi, simulationApi } from '../../api/endpoints'
+import { ApiError } from '../../api/client'
+import { Alert } from '../../components/Alert'
+import { ButtonLink } from '../../components/Button'
+import { useToast } from '../../components/Toast'
 import { Card } from '../../components/Card'
+import { CHANNEL_LABELS } from '../../components/ChannelBadge'
 import { ErrorNotice } from '../../components/Notice'
 import { PageHeader } from '../../components/PageHeader'
 import { usePolling } from '../../lib/usePolling'
@@ -21,6 +26,17 @@ export function SimulationPage() {
   const { setup } = session
   const customer = customers.find((entry) => entry.id === setup.customerId)
   const supportAgent = supportAgents.find((entry) => entry.id === setup.supportAgentId)
+  const apiKeys = useResource(() => apiKeysApi.list(), [])
+  const availableKeys = apiKeys.data ?? []
+  const apiKey = availableKeys.find((entry) => entry.id === setup.apiKeyId)
+  const paused = apiKeys.data !== undefined && availableKeys.length === 0
+  const { show } = useToast()
+
+  useEffect(() => {
+    if (!apiKey && availableKeys.length > 0) {
+      updateSetup({ apiKeyId: availableKeys[0].id })
+    }
+  }, [apiKey, availableKeys])
 
   useEffect(() => {
     if (!customer && customers.length > 0) {
@@ -42,7 +58,7 @@ export function SimulationPage() {
 
   const send = async () => {
     const message = draft.trim()
-    if (message === '' || replying || !customer || !supportAgent) {
+    if (message === '' || replying || !customer || !supportAgent || !apiKey) {
       return
     }
     const history = session.turns.map(({ role, content }) => ({ role, content }))
@@ -56,6 +72,7 @@ export function SimulationPage() {
         channel: setup.channel,
         customerId: customer.id,
         supportAgentId: supportAgent.id,
+        apiKeyId: apiKey.id,
         message,
         history,
       })
@@ -63,7 +80,12 @@ export function SimulationPage() {
     } catch (exception) {
       removeLastTurn()
       setDraft(message)
-      setError(exception instanceof Error ? exception.message : 'The message could not be sent.')
+      if (exception instanceof ApiError && exception.code === 'API_KEY_UNAVAILABLE') {
+        show({ tone: 'error', title: 'API key was deleted', description: 'Select another API key or create a new one to continue.' })
+        void apiKeys.reload()
+      } else {
+        setError(exception instanceof Error ? exception.message : 'The message could not be sent.')
+      }
     } finally {
       setReplying(false)
     }
@@ -75,12 +97,28 @@ export function SimulationPage() {
     setError(null)
   }
 
+  const setupSummary = [CHANNEL_LABELS[setup.channel], customer?.fullName, supportAgent?.fullName].filter(Boolean).join(' · ')
+
   return (
-    <>
+    <div className={styles.page}>
       <PageHeader
         title="Simulation"
-        description="Pick a channel, customer and support assistant, then chat as the customer. Each turn is also sent to Client Pulse, which scores it in the background."
+        description="Pick a channel, customer and support assistant, then chat as the customer. Each turn is also sent to Client Pulse AI, which scores it in the background."
       />
+      {paused && (
+        <Alert
+          tone="warning"
+          title="Simulation is paused"
+          className={styles.pausedAlert}
+          action={
+            <ButtonLink to="/api-keys" variant="primary" size="small">
+              Create API key
+            </ButtonLink>
+          }
+        >
+          There is no API key for your account. Client Pulse AI needs an active key to receive conversations.
+        </Alert>
+      )}
       <div className={styles.layout}>
         <Card className={styles.chat}>
           <Conversation
@@ -91,7 +129,7 @@ export function SimulationPage() {
           />
           {directory.error && <ErrorNotice message={directory.error} className={styles.error} />}
           {error && <ErrorNotice message={error} className={styles.error} />}
-          <Composer value={draft} disabled={replying || !customer || !supportAgent} onChange={setDraft} onSubmit={() => void send()} />
+          <Composer value={draft} disabled={replying || !customer || !supportAgent || !apiKey} onChange={setDraft} onSubmit={() => void send()} />
         </Card>
         <SessionPanel
           setup={
@@ -99,6 +137,7 @@ export function SimulationPage() {
               setup={setup}
               customers={customers}
               supportAgents={supportAgents}
+              apiKeys={availableKeys}
               locked={session.turns.length > 0}
               onChange={updateSetup}
             />
@@ -107,8 +146,9 @@ export function SimulationPage() {
           turnCount={session.turns.length}
           requests={sessionRequests}
           onNewSession={newSession}
+          summary={setupSummary}
         />
       </div>
-    </>
+    </div>
   )
 }

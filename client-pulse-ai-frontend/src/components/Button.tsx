@@ -3,7 +3,7 @@ import { Link } from 'react-router'
 import styles from './Button.module.css'
 
 type Appearance = {
-  variant?: 'primary' | 'secondary' | 'ghost'
+  variant?: 'primary' | 'secondary' | 'ghost' | 'danger'
   size?: 'medium' | 'small'
   iconOnly?: boolean
 }

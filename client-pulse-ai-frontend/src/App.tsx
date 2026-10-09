@@ -1,10 +1,12 @@
 import { Navigate, Route, Routes } from 'react-router'
 import { RequireAuth } from './auth/RequireAuth'
 import { AppShell } from './components/AppShell'
+import { ApiKeysPage } from './features/api-keys/ApiKeysPage'
 import { LoginPage } from './features/auth/LoginPage'
 import { OverviewPage } from './features/overview/OverviewPage'
 import { RequestDetailDrawer } from './features/requests/RequestDetailDrawer'
 import { RequestsPage } from './features/requests/RequestsPage'
+import { SettingsPage } from './features/settings/SettingsPage'
 import { SimulationPage } from './features/simulation/SimulationPage'
 
 export function App() {
@@ -23,6 +25,8 @@ export function App() {
         <Route path="/requests" element={<RequestsPage />}>
           <Route path=":id" element={<RequestDetailDrawer />} />
         </Route>
+        <Route path="/api-keys" element={<ApiKeysPage />} />
+        <Route path="/settings" element={<SettingsPage />} />
       </Route>
       <Route path="*" element={<Navigate to="/overview" replace />} />
     </Routes>

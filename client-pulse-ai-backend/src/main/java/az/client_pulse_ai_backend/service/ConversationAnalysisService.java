@@ -20,6 +20,7 @@ public class ConversationAnalysisService {
 
 	private final AnalysisRequestRepository analysisRequestRepository;
 	private final ConversationScorer conversationScorer;
+	private final LowScoreAlertService lowScoreAlertService;
 
 	@Async
 	public void analyze(AnalysisContext context, List<ChatMessage> conversation) {
@@ -28,6 +29,8 @@ public class ConversationAnalysisService {
 				context.channel(),
 				context.customer(),
 				context.supportAgent(),
+				context.owner(),
+				context.apiKeyMasked(),
 				toAnalysisMessages(conversation)));
 		try {
 			ConversationScore conversationScore = conversationScorer.score(conversation);
@@ -37,6 +40,7 @@ public class ConversationAnalysisService {
 			analysisRequest.fail(exception.getMessage());
 		}
 		analysisRequestRepository.save(analysisRequest);
+		lowScoreAlertService.alertIfBelowThreshold(analysisRequest);
 	}
 
 	private List<AnalysisMessage> toAnalysisMessages(List<ChatMessage> conversation) {

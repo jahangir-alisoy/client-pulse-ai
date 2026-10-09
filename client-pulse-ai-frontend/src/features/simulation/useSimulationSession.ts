@@ -10,6 +10,7 @@ export type SessionSetup = {
   channel: Channel
   customerId: number | null
   supportAgentId: number | null
+  apiKeyId: number | null
 }
 
 export type SimulationSession = {
@@ -18,7 +19,7 @@ export type SimulationSession = {
   turns: Turn[]
 }
 
-const DEFAULT_SETUP: SessionSetup = { channel: 'CHAT', customerId: null, supportAgentId: null }
+const DEFAULT_SETUP: SessionSetup = { channel: 'CHAT', customerId: null, supportAgentId: null, apiKeyId: null }
 
 function createSession(setup: SessionSetup = DEFAULT_SETUP): SimulationSession {
   return { sessionId: createUuid(), setup, turns: [] }

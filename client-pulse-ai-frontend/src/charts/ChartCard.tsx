@@ -20,7 +20,7 @@ export function ChartCard({ title, description, columns, rows, dimmed = false, e
   return (
     <Card className={styles.card}>
       <div className={styles.header}>
-        <div>
+        <div className={styles.heading}>
           <h2 className={styles.title}>{title}</h2>
           {description && <p className={styles.description}>{description}</p>}
         </div>

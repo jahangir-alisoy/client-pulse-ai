@@ -14,6 +14,7 @@ public record SimulationChatRequest(
 		@NotNull Long customerId,
 		@NotNull Long supportAgentId,
 		@NotBlank String message,
-		@NotNull List<@Valid ChatMessage> history
+		@NotNull List<@Valid ChatMessage> history,
+		@NotNull Long apiKeyId
 ) {
 }

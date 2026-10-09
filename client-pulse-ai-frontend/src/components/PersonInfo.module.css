@@ -78,3 +78,11 @@
 .empty {
   color: var(--text-muted);
 }
+
+@media (max-width: 767px), (pointer: coarse) {
+  .trigger {
+    width: 32px;
+    height: 32px;
+    margin: -5px -5px -5px -3px;
+  }
+}

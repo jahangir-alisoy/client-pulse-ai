@@ -2,8 +2,18 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 8px 12px;
-  margin-bottom: 16px;
+  gap: 8px 10px;
+  margin-bottom: 20px;
+}
+
+.presets {
+  max-width: 100%;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.presets::-webkit-scrollbar {
+  display: none;
 }
 
 .segmented {
@@ -12,20 +22,28 @@
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
   background: var(--surface);
+  box-shadow: var(--shadow-card);
 }
 
 .option {
-  height: 26px;
-  padding: 0 10px;
+  flex: none;
+  height: 30px;
+  padding: 0 12px;
   border: 0;
   border-radius: 4px;
   background: transparent;
   color: var(--text-secondary);
-  font-size: 12.5px;
+  font-size: 13px;
+  white-space: nowrap;
+  transition: background-color 120ms ease, color 120ms ease;
 }
 
 .option:hover {
   color: var(--text);
+}
+
+.option:focus-visible {
+  outline-offset: -2px;
 }
 
 .selected {
@@ -38,15 +56,68 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  color: var(--text-secondary);
-  font-size: 12.5px;
 }
 
-.control {
-  height: 32px;
-  padding: 0 8px;
-  border: 1px solid var(--border-strong);
-  border-radius: var(--radius-sm);
-  background: var(--surface);
-  font-size: 12.5px;
+.date.date {
+  width: 150px;
+  height: 36px;
+  font-size: 13px;
+}
+
+.dash {
+  color: var(--text-muted);
+}
+
+.channel {
+  min-width: 150px;
+}
+
+.channelSelect.channelSelect {
+  height: 36px;
+  font-size: 13px;
+}
+
+@media (max-width: 767px) {
+  .bar {
+    margin-bottom: 16px;
+  }
+
+  .presets {
+    flex: 1 1 calc(100% + 32px);
+    margin: -2px -16px;
+    padding: 2px 16px;
+  }
+
+  .segmented {
+    display: flex;
+    width: max-content;
+    min-width: 100%;
+  }
+
+  .option {
+    flex: 1 0 auto;
+    height: 38px;
+    padding: 0 12px;
+    font-size: 14px;
+  }
+
+  .dates {
+    flex: 1 1 100%;
+  }
+
+  .date.date {
+    flex: 1;
+    width: auto;
+    height: 40px;
+    font-size: 16px;
+  }
+
+  .channel {
+    flex: 1 1 100%;
+  }
+
+  .channelSelect.channelSelect {
+    height: 40px;
+    font-size: 16px;
+  }
 }

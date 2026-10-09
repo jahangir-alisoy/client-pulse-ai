@@ -1,10 +1,15 @@
 import styles from './Logo.module.css'
 
-export function Logo() {
-    return (
-        <span className={styles.logo}>
-          <img src="/logo.png" alt="" className={styles.mark} />
-          <span className={styles.name}>Client Pulse AI</span>
-        </span>
-    )
+type LogoProps = {
+  className?: string
+  nameClassName?: string
+}
+
+export function Logo({ className, nameClassName }: LogoProps) {
+  return (
+    <span className={`${styles.logo} ${className ?? ''}`}>
+      <img src="/logo.png" alt="" className={styles.mark} />
+      <span className={`${styles.name} ${nameClassName ?? ''}`}>Client Pulse AI</span>
+    </span>
+  )
 }

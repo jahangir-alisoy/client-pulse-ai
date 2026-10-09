@@ -3,15 +3,16 @@
   align-items: flex-start;
   gap: 8px;
   padding: 10px 12px;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  background: var(--surface);
+  border: 1px solid color-mix(in srgb, var(--tone-error) 32%, var(--border));
+  border-radius: var(--radius);
+  background: color-mix(in srgb, var(--tone-error) 6%, var(--surface));
   color: var(--text);
   font-size: 13px;
+  overflow-wrap: anywhere;
 }
 
 .icon {
   flex: none;
   margin-top: 2px;
-  color: var(--status-critical);
+  color: var(--tone-error);
 }

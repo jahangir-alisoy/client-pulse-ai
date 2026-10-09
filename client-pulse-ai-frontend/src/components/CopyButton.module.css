@@ -1,0 +1,7 @@
+.button {
+  min-width: 76px;
+}
+
+.copied {
+  color: var(--tone-success);
+}

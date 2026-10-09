@@ -5,6 +5,7 @@ import az.client_pulse_ai_backend.dto.SimulationChatResponse;
 import az.client_pulse_ai_backend.service.SimulationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,8 +19,8 @@ public class SimulationController {
 	private final SimulationService simulationService;
 
 	@PostMapping("/chat")
-	public SimulationChatResponse chat(@Valid @RequestBody SimulationChatRequest request) {
-		return simulationService.chat(request);
+	public SimulationChatResponse chat(Authentication authentication, @Valid @RequestBody SimulationChatRequest request) {
+		return simulationService.chat(authentication.getName(), request);
 	}
 
 }
