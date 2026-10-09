@@ -31,6 +31,11 @@ public class User {
 	@Column(nullable = false)
 	private boolean apiKeyProvisioned;
 
+	public User(String username, String encodedPassword) {
+		this.username = username;
+		this.password = encodedPassword;
+	}
+
 	public void changeUsername(String username) {
 		this.username = username;
 	}
