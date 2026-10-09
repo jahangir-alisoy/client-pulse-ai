@@ -10,12 +10,7 @@
   flex: none;
   width: 24px;
   height: 24px;
-  border-radius: 6px;
-  background: var(--ink);
-}
-
-.mark path {
-  stroke: var(--accent);
+  object-fit: contain;
 }
 
 .name {

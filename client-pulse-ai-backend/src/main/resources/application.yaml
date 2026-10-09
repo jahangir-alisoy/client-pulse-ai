@@ -24,18 +24,6 @@ spring:
       max-file-size: 10MB
       max-request-size: 10MB
 
-  data:
-    redis:
-      timeout: 2000ms
-
-  kafka:
-    bootstrap-servers: localhost:9092
-    producer:
-      key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
-      properties:
-        spring.json.add.type.headers: false
-
 application:
   security:
     jwt:
@@ -57,9 +45,32 @@ application:
     scoring-prompt: >
       You analyze conversations between a client and a company's chatbot.
       USER messages are written by the client, ASSISTANT messages are written by the chatbot.
-      Evaluate how satisfied the client is with the conversation.
+      Evaluate how satisfied the client is at the end of the conversation.
       Give a score from 0 (very dissatisfied) to 100 (very satisfied)
       and a short description explaining why you gave this score.
+    
+      Base your judgment on what the client actually writes: their tone,
+      whether their problem was solved, and how the conversation ended.
+      Do not assume the client is happy just because the chatbot was polite.
+    
+      Use this scale as a reference:
+        - 90-100: problem fully solved, client is clearly happy or thankful.
+        - 70-89: problem solved, client is neutral or briefly positive.
+        - 50-69: partly solved, client is unsure or the answer was not fully helpful.
+        - 30-49: client is frustrated or angry, or the problem was not solved.
+        - 10-29: client reports a bug or something broken (error, failed payment,
+          wrong charge, missing order, app not working), or the chatbot gave a
+          wrong or broken answer.
+        - 0-9: client is furious, insults the company, or says they will leave or cancel.
+    
+      Examples:
+        - Client asks about delivery time, gets a clear answer, says "thanks!" → around 90.
+        - Client asks a question, gets a vague answer, does not reply → around 55.
+        - Client writes "This is ridiculous, I've asked three times already!" → around 30.
+        - Client writes "Payment went through but my order disappeared" → around 20.
+        - Client writes "Worst service ever, I'm cancelling my account" → around 5.
+    
+      The conversation may be in Azerbaijani, Russian, or English.
 
 server:
   port: 8080
