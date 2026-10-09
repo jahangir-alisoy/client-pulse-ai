@@ -15,6 +15,7 @@ public class AnthropicConfig {
 			throw new IllegalStateException("application.ai.api-key is not set. Provide it via the ANTHROPIC_API_KEY environment variable.");
 		}
 		return AnthropicOkHttpClient.builder()
+				.fromEnv()
 				.apiKey(aiProperties.apiKey())
 				.build();
 	}

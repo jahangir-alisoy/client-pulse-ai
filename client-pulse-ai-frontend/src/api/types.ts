@@ -2,6 +2,29 @@ export type ChatRole = 'USER' | 'ASSISTANT'
 
 export type AnalysisStatus = 'PENDING' | 'COMPLETED' | 'FAILED'
 
+export type Channel = 'CHAT' | 'PHONE' | 'EMAIL'
+
+export type Customer = {
+  id: number
+  customerNumber: string
+  fullName: string
+  email: string | null
+  phone: string | null
+}
+
+export type SupportAgent = {
+  id: number
+  employeeNumber: string
+  fullName: string
+  team: string | null
+}
+
+export type AnalysisQuery = {
+  from?: string
+  to?: string
+  channel?: Channel
+}
+
 export type ChatMessage = {
   role: ChatRole
   content: string
@@ -14,6 +37,9 @@ export type TokenResponse = {
 
 export type SimulationChatRequest = {
   sessionId: string
+  channel: Channel
+  customerId: number
+  supportAgentId: number
   message: string
   history: ChatMessage[]
 }
@@ -25,6 +51,9 @@ export type SimulationChatResponse = {
 export type AnalysisRequestSummary = {
   id: number
   sessionId: string
+  channel: Channel
+  customer: Customer | null
+  supportAgent: SupportAgent | null
   status: AnalysisStatus
   score: number | null
   description: string | null
@@ -61,6 +90,12 @@ export type ScoreRangeStatistics = {
   count: number
 }
 
+export type ChannelStatistics = {
+  channel: Channel
+  requestCount: number
+  averageScore: number | null
+}
+
 export type AnalysisStatistics = {
   totalRequests: number
   pendingRequests: number
@@ -68,5 +103,6 @@ export type AnalysisStatistics = {
   failedRequests: number
   averageScore: number | null
   dailyStatistics: DailyStatistics[]
+  channelStatistics: ChannelStatistics[]
   scoreDistribution: ScoreRangeStatistics[]
 }

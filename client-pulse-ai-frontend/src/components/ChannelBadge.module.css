@@ -1,0 +1,12 @@
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text);
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.icon {
+  color: var(--text-muted);
+}

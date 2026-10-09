@@ -1,4 +1,5 @@
 import { Plus } from 'lucide-react'
+import type { ReactNode } from 'react'
 import { Link } from 'react-router'
 import type { AnalysisRequestSummary } from '../../api/types'
 import { Button } from '../../components/Button'
@@ -8,13 +9,14 @@ import { formatTime, shortId } from '../../lib/format'
 import styles from './Simulation.module.css'
 
 type SessionPanelProps = {
+  setup: ReactNode
   sessionId: string
   turnCount: number
   requests: AnalysisRequestSummary[]
   onNewSession: () => void
 }
 
-export function SessionPanel({ sessionId, turnCount, requests, onNewSession }: SessionPanelProps) {
+export function SessionPanel({ setup, sessionId, turnCount, requests, onNewSession }: SessionPanelProps) {
   const latest = requests.find((request) => request.status === 'COMPLETED')
 
   return (
@@ -33,6 +35,7 @@ export function SessionPanel({ sessionId, turnCount, requests, onNewSession }: S
         <p className={styles.sessionMeta}>
           {turnCount} {turnCount === 1 ? 'message' : 'messages'}
         </p>
+        {setup}
       </section>
       <section className={styles.panelSection}>
         <div className={styles.panelHeading}>Latest score</div>
