@@ -1,0 +1,30 @@
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--text);
+  white-space: nowrap;
+}
+
+.completed {
+  color: var(--status-good);
+}
+
+.failed {
+  color: var(--status-critical);
+}
+
+.pending {
+  color: var(--text-muted);
+}
+
+.spin {
+  animation: spin 1.6s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
