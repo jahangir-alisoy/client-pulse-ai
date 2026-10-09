@@ -1,0 +1,45 @@
+spring:
+  application:
+    name: client-pulse-ai-backend
+
+  datasource:
+    driver-class-name: org.postgresql.Driver
+
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/clientpulseai}
+    username: ${DB_USERNAME:clientpulseai}
+    password: ${DB_PASSWORD:clientpulseai123!}
+
+    jpa:
+      hibernate:
+        ddl-auto: create
+      open-in-view: false
+
+    servlet:
+      multipart:
+        enabled: true
+        max-file-size: 10MB
+        max-request-size: 10MB
+
+    data:
+      redis:
+        timeout: 2000ms
+
+    kafka:
+      bootstrap-servers: localhost:9092
+      producer:
+        key-serializer: org.apache.kafka.common.serialization.StringSerializer
+        value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+        properties:
+          spring.json.add.type.headers: false
+
+application:
+  security:
+    jwt:
+      secret-key: ${JWT_SECRET_KEY:qYrUvRZbMm1gxAVfVG8KtJPqfLf3A2qkwo0U7cqDC+HqU0ZVOz+N4VkkFqaQoxlc}
+      access-token:
+        expiration: ${ACCESS_TOKEN_EXPIRATION:3600000}
+      refresh-token:
+        expiration: ${REFRESH_TOKEN_EXPIRATION:604800000}
+
+server:
+  port: 8080
