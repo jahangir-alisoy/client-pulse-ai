@@ -49,6 +49,7 @@ application:
     allowed-origins: ${CORS_ALLOWED_ORIGINS:*}
 
   ai:
+    api-key: ${ANTHROPIC_API_KEY:}
     model: ${AI_MODEL:claude-opus-5-5}
     chatbot-prompt: >
       You are a friendly customer support assistant of a company.
