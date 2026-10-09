@@ -1,0 +1,620 @@
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.cardHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+}
+
+.cardHeading {
+  min-width: 0;
+}
+
+.cardTitle {
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.cardDescription {
+  margin-top: 3px;
+  color: var(--text-secondary);
+  font-size: 12.5px;
+  line-height: 1.5;
+  text-wrap: pretty;
+}
+
+.inlineIcon {
+  margin-right: 5px;
+  color: var(--text-muted);
+  vertical-align: -1px;
+}
+
+.count {
+  flex: none;
+  padding: 2px 9px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface-sunken);
+  color: var(--text-secondary);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+.listCard {
+  overflow: hidden;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: minmax(140px, 1.1fr) minmax(184px, 1.1fr) minmax(0, 2fr) minmax(92px, auto);
+  align-items: center;
+  gap: 16px;
+  padding: 0 20px;
+}
+
+.columns {
+  height: 36px;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface-sunken);
+  color: var(--text-secondary);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.metaColumns {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.keys {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.key,
+.skeletonRow {
+  min-height: 60px;
+  padding-top: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+.key:last-child,
+.skeletonRow:last-child {
+  border-bottom: 0;
+}
+
+.key {
+  transition: background-color 120ms ease;
+}
+
+.key:hover {
+  background: color-mix(in srgb, var(--surface-hover) 60%, transparent);
+}
+
+.keyName {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.keyIcon {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface-sunken);
+  color: var(--text-secondary);
+}
+
+.keyTitle {
+  min-width: 0;
+  overflow: hidden;
+  font-size: 13.5px;
+  font-weight: 500;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.keyValueCell {
+  min-width: 0;
+}
+
+.keyValue {
+  display: inline-block;
+  max-width: 100%;
+  padding: 3px 8px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface-sunken);
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  line-height: 1.5;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  vertical-align: middle;
+}
+
+.meta {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  margin: 0;
+  font-size: 13px;
+}
+
+.metaItem {
+  min-width: 0;
+}
+
+.metaItem dt {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+}
+
+.metaItem dd {
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.never {
+  color: var(--text-muted);
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 2px;
+}
+
+.actions .action {
+  width: 28px;
+  padding: 0;
+}
+
+.actionLabel {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+}
+
+.actions .deleteAction:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--danger) 10%, transparent);
+  color: var(--tone-error);
+}
+
+.skeletonActions {
+  justify-self: end;
+}
+
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px 24px 44px;
+  text-align: center;
+}
+
+.emptyIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  margin-bottom: 14px;
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--radius);
+  color: var(--text-secondary);
+}
+
+.emptyTitle {
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.emptyText {
+  max-width: 44ch;
+  margin-top: 4px;
+  color: var(--text-secondary);
+  font-size: 13.5px;
+  text-wrap: pretty;
+}
+
+.secondary {
+  display: grid;
+  grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr);
+  align-items: start;
+  gap: 16px;
+}
+
+.guide,
+.security {
+  overflow: hidden;
+}
+
+.guideBody {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 16px 20px 20px;
+}
+
+.endpoint {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  padding: 5px 5px 5px 8px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface-sunken);
+}
+
+.method {
+  flex: none;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: var(--ink);
+  color: var(--text-inverse);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+.endpointUrl {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.facts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px 24px;
+  margin: 0;
+}
+
+.fact {
+  min-width: 0;
+}
+
+.fact dt {
+  margin-bottom: 3px;
+  color: var(--text-muted);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.fact dd {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 13px;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+
+.fact code {
+  padding: 1px 5px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: var(--surface-sunken);
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+
+.code {
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface-sunken);
+}
+
+.codeHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 4px 4px 4px 12px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-secondary);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.codeBody {
+  margin: 0;
+  padding: 12px 14px 14px;
+  overflow-x: auto;
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 1.7;
+  tab-size: 2;
+}
+
+.codeBody:focus-visible {
+  outline-offset: -2px;
+}
+
+.practices {
+  margin: 0;
+  padding: 4px 20px 8px;
+  list-style: none;
+}
+
+.practice {
+  display: flex;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.practice:last-child {
+  border-bottom: 0;
+}
+
+.practiceIcon {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface-sunken);
+  color: var(--text-secondary);
+}
+
+.practiceText {
+  min-width: 0;
+}
+
+.practiceTitle {
+  font-size: 13.5px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.practiceText p {
+  margin-top: 2px;
+  color: var(--text-secondary);
+  font-size: 13px;
+  line-height: 1.5;
+  text-wrap: pretty;
+}
+
+.secret {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.secretLabel {
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.secretRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 8px 8px 12px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
+  background: var(--surface-sunken);
+}
+
+.secretValue {
+  flex: 1;
+  min-width: 0;
+  color: var(--text-secondary);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 1.55;
+  word-break: break-all;
+}
+
+.secretRevealed {
+  color: var(--text);
+  user-select: all;
+}
+
+.secretActions {
+  display: flex;
+  flex: none;
+  gap: 6px;
+}
+
+.secretWarning {
+  margin-top: 16px;
+}
+
+.secretNote {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  margin-top: 12px;
+  color: var(--text-muted);
+  font-size: 12.5px;
+  line-height: 1.5;
+}
+
+.secretNote svg {
+  flex: none;
+  margin-top: 2px;
+}
+
+@media (pointer: coarse) {
+  .actions .action {
+    width: 40px;
+  }
+}
+
+@container (max-width: 899px) {
+  .columns {
+    display: none;
+  }
+
+  .row {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 12px;
+    padding: 14px 16px;
+  }
+
+  .key {
+    grid-template-areas:
+      'name actions'
+      'value value'
+      'meta meta';
+    row-gap: 10px;
+  }
+
+  .skeletonRow {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .skeletonActions {
+    align-self: auto;
+  }
+
+  .keyName {
+    grid-area: name;
+  }
+
+  .keyValueCell {
+    grid-area: value;
+  }
+
+  .meta {
+    grid-area: meta;
+    gap: 12px;
+  }
+
+  .metaItem {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+  }
+
+  .metaItem dt {
+    position: static;
+    width: auto;
+    height: auto;
+    overflow: visible;
+    clip: auto;
+    color: var(--text-muted);
+    font-size: 12px;
+  }
+
+  .actions {
+    grid-area: actions;
+    gap: 4px;
+  }
+
+  .actions .action {
+    width: auto;
+    padding: 0 10px;
+  }
+
+  .actionLabel {
+    position: static;
+    width: auto;
+    height: auto;
+    overflow: visible;
+    clip: auto;
+  }
+
+  .secondary {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@container (max-width: 559px) {
+  .cardHeader {
+    padding: 14px 16px;
+  }
+
+  .key {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      'name'
+      'value'
+      'meta'
+      'actions';
+  }
+
+  .actions {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+    padding-top: 2px;
+  }
+
+  .actions .action {
+    border-color: var(--border);
+  }
+
+  .guideBody {
+    padding: 14px 16px 16px;
+  }
+
+  .facts {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+  }
+
+  .practices {
+    padding: 2px 16px 6px;
+  }
+}
+
+@media (max-width: 767px) {
+  .secretRow {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 12px;
+  }
+
+  .secretActions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

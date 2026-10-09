@@ -3,17 +3,21 @@ import type { TokenResponse } from './types'
 
 const API_BASE_URL: string = import.meta.env.VITE_API_BASE_URL ?? '/api/v1'
 
+export const API_KEY_UNAVAILABLE = 'API_KEY_UNAVAILABLE'
+
 export class ApiError extends Error {
   readonly status: number
+  readonly code?: string
 
-  constructor(status: number, message: string) {
+  constructor(status: number, message: string, code?: string) {
     super(message)
     this.status = status
+    this.code = code
   }
 }
 
 type RequestOptions = {
-  method?: 'GET' | 'POST'
+  method?: 'GET' | 'POST' | 'PUT' | 'DELETE'
   body?: unknown
   authenticated?: boolean
 }
@@ -50,19 +54,33 @@ function send(path: string, options: RequestOptions, authenticated: boolean): Pr
   })
 }
 
+export function absoluteApiUrl(path: string): string {
+  return new URL(`${API_BASE_URL}${path}`, window.location.origin).toString()
+}
+
 async function parse<T>(response: Response): Promise<T> {
   if (response.ok) {
     return (response.status === 204 ? undefined : await response.json()) as T
   }
-  throw new ApiError(response.status, await errorMessage(response))
+  const problem = await readProblem(response)
+  throw new ApiError(response.status, problem.message, problem.code)
 }
 
-async function errorMessage(response: Response): Promise<string> {
+type Problem = {
+  message: string
+  code?: string
+}
+
+async function readProblem(response: Response): Promise<Problem> {
+  const fallback = `Request failed (${response.status})`
   try {
-    const body = (await response.json()) as { detail?: string; message?: string; error?: string }
-    return body.detail ?? body.message ?? body.error ?? `Request failed (${response.status})`
+    const body = (await response.json()) as { detail?: string; message?: string; error?: string; code?: unknown }
+    return {
+      message: body.detail ?? body.message ?? body.error ?? fallback,
+      code: typeof body.code === 'string' ? body.code : undefined,
+    }
   } catch {
-    return `Request failed (${response.status})`
+    return { message: fallback }
   }
 }
 

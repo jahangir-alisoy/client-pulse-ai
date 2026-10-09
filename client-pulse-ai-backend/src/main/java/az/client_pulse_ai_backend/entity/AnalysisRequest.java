@@ -51,6 +51,12 @@ public class AnalysisRequest {
 	@JoinColumn(name = "support_agent_id")
 	private SupportAgent supportAgent;
 
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "owner_id")
+	private User owner;
+
+	private String apiKeyMasked;
+
 	@ElementCollection
 	@CollectionTable(name = "analysis_request_messages", joinColumns = @JoinColumn(name = "analysis_request_id"))
 	@OrderColumn(name = "position")
@@ -74,11 +80,14 @@ public class AnalysisRequest {
 
 	private Instant analyzedAt;
 
-	public AnalysisRequest(UUID sessionId, Channel channel, Customer customer, SupportAgent supportAgent, List<AnalysisMessage> messages) {
+	public AnalysisRequest(UUID sessionId, Channel channel, Customer customer, SupportAgent supportAgent,
+			User owner, String apiKeyMasked, List<AnalysisMessage> messages) {
 		this.sessionId = sessionId;
 		this.channel = channel;
 		this.customer = customer;
 		this.supportAgent = supportAgent;
+		this.owner = owner;
+		this.apiKeyMasked = apiKeyMasked;
 		this.messages = new ArrayList<>(messages);
 		this.status = AnalysisStatus.PENDING;
 	}

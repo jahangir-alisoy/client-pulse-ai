@@ -1,5 +1,7 @@
 .button {
+  position: relative;
   display: inline-flex;
+  flex: none;
   align-items: center;
   justify-content: center;
   gap: 6px;
@@ -12,7 +14,17 @@
   line-height: 1;
   white-space: nowrap;
   text-decoration: none;
-  transition: background-color 120ms ease, border-color 120ms ease, color 120ms ease;
+  user-select: none;
+  transition: background-color 120ms ease, border-color 120ms ease, color 120ms ease, box-shadow 120ms ease, transform 80ms ease;
+}
+
+.button:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--accent);
+}
+
+.button:active:not(:disabled) {
+  transform: translateY(0.5px);
 }
 
 .button:disabled {
@@ -47,6 +59,7 @@
   background: var(--surface);
   border-color: var(--border-strong);
   color: var(--text);
+  box-shadow: var(--shadow-card);
 }
 
 .secondary:hover:not(:disabled) {
@@ -61,4 +74,35 @@
 .ghost:hover:not(:disabled) {
   background: var(--surface-hover);
   color: var(--text);
+}
+
+.danger {
+  background: var(--danger);
+  color: var(--on-danger);
+}
+
+.danger:hover:not(:disabled) {
+  background: var(--danger-hover);
+}
+
+.danger:focus-visible {
+  box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--danger);
+}
+
+@media (max-width: 767px), (pointer: coarse) {
+  .button,
+  .small {
+    height: 40px;
+  }
+
+  .button {
+    padding: 0 14px;
+    font-size: 14px;
+  }
+
+  .iconOnly,
+  .small.iconOnly {
+    width: 40px;
+    padding: 0;
+  }
 }

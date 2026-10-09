@@ -7,6 +7,7 @@ import { Drawer } from '../../components/Drawer'
 import { ChannelBadge } from '../../components/ChannelBadge'
 import { ErrorNotice } from '../../components/Notice'
 import { CustomerInfo, SupportAgentInfo } from '../../components/People'
+import { Skeleton } from '../../components/Skeleton'
 import { StatusBadge } from '../../components/StatusBadge'
 import { formatDateTime, shortId } from '../../lib/format'
 import { usePolling } from '../../lib/usePolling'
@@ -32,7 +33,7 @@ export function RequestDetailDrawer() {
   return (
     <Drawer title={`Request #${id}`} onClose={close}>
       {detail.error && <ErrorNotice message={detail.error} />}
-      {!detail.data && !detail.error && <p className={styles.loading}>Loading…</p>}
+      {!detail.data && !detail.error && <DetailSkeleton />}
       {detail.data && <RequestDetail request={detail.data} />}
     </Drawer>
   )
@@ -85,6 +86,12 @@ function RequestDetail({ request }: { request: AnalysisRequestDetail }) {
           <dd className="mono">{request.sessionId}</dd>
           <dt>Received</dt>
           <dd className="tabular">{formatDateTime(request.createdAt)}</dd>
+          {request.apiKeyMasked && (
+            <>
+              <dt>API key</dt>
+              <dd className="mono">{request.apiKeyMasked}</dd>
+            </>
+          )}
           <dt>Analyzed</dt>
           <dd className="tabular">{formatDateTime(request.analyzedAt)}</dd>
           <dt>Duration</dt>
@@ -109,9 +116,22 @@ function RequestDetail({ request }: { request: AnalysisRequestDetail }) {
   )
 }
 
+function DetailSkeleton() {
+  return (
+    <div aria-busy="true" aria-label="Loading request">
+      <Skeleton height={132} radius={12} />
+      <Skeleton width={96} height={13} className={styles.section} />
+      <Skeleton height={12} className={styles.skeletonLine} />
+      <Skeleton width="72%" height={12} className={styles.skeletonLine} />
+      <Skeleton width={96} height={13} className={styles.section} />
+      <Skeleton height={160} radius={12} className={styles.skeletonLine} />
+    </div>
+  )
+}
+
 function Assessment({ request }: { request: AnalysisRequestDetail }) {
   if (request.status === 'PENDING') {
-    return <p className={`${styles.paragraph} ${styles.muted}`}>Client Pulse is scoring this conversation…</p>
+    return <p className={`${styles.paragraph} ${styles.muted}`}>Client Pulse AI is scoring this conversation…</p>
   }
   if (request.status === 'FAILED') {
     return (

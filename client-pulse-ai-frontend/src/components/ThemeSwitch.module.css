@@ -17,13 +17,25 @@
   border-radius: 4px;
   background: transparent;
   color: var(--text-muted);
+  transition: background-color 120ms ease, color 120ms ease;
 }
 
 .option:hover {
   color: var(--text);
 }
 
+.option:focus-visible {
+  outline-offset: 0;
+}
+
 .selected {
   background: var(--surface-active);
   color: var(--text);
+}
+
+@media (max-width: 767px), (pointer: coarse) {
+  .option {
+    width: 40px;
+    height: 34px;
+  }
 }

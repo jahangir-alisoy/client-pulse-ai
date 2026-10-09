@@ -1,3 +1,4 @@
+import { MessagesSquare } from 'lucide-react'
 import { useEffect, useRef } from 'react'
 import { formatTime } from '../../lib/format'
 import type { Turn } from './useSimulationSession'
@@ -21,9 +22,12 @@ export function Conversation({ customerName, assistantName, turns, replying }: C
     <div ref={container} className={styles.messages} aria-live="polite">
       {turns.length === 0 && !replying ? (
         <div className={styles.intro}>
+          <span className={styles.introIcon} aria-hidden="true">
+            <MessagesSquare size={20} strokeWidth={1.75} />
+          </span>
           <h2 className={styles.introTitle}>Simulate a client conversation</h2>
           <p className={styles.introText}>
-            Write as a client would. The assistant answers right away, and each turn is sent to Client Pulse to be scored in the background.
+            Write as a client would. The assistant answers right away, and each turn is sent to Client Pulse AI to be scored in the background.
           </p>
         </div>
       ) : (

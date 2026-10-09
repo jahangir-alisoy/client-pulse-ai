@@ -19,13 +19,17 @@ public class SimulationService {
 	private final ConversationAnalysisService conversationAnalysisService;
 	private final CustomerService customerService;
 	private final SupportAgentService supportAgentService;
+	private final ApiKeyAccessService apiKeyAccessService;
 
-	public SimulationChatResponse chat(SimulationChatRequest request) {
+	public SimulationChatResponse chat(String username, SimulationChatRequest request) {
+		AuthenticatedApiKey apiKey = apiKeyAccessService.useOwnedKey(username, request.apiKeyId());
 		AnalysisContext context = new AnalysisContext(
 				request.sessionId(),
 				request.channel(),
 				customerService.getById(request.customerId()),
-				supportAgentService.getById(request.supportAgentId()));
+				supportAgentService.getById(request.supportAgentId()),
+				apiKey.owner(),
+				apiKey.maskedKey());
 		List<ChatMessage> conversation = append(request.history(), new ChatMessage(ChatRole.USER, request.message()));
 		String reply = chatbot.reply(conversation);
 		conversationAnalysisService.analyze(context, append(conversation, new ChatMessage(ChatRole.ASSISTANT, reply)));

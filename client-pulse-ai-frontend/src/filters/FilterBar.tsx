@@ -1,5 +1,6 @@
 import type { Channel } from '../api/types'
 import { CHANNEL_LABELS, CHANNELS } from '../components/ChannelBadge'
+import { Input, Select } from '../components/Field'
 import { useAnalysisFilter, type RangePreset } from './AnalysisFilterContext'
 import styles from './FilterBar.module.css'
 
@@ -16,34 +17,38 @@ export function FilterBar() {
 
   return (
     <div className={styles.bar}>
-      <div className={styles.segmented} role="radiogroup" aria-label="Date range">
-        {PRESETS.map(({ value, label }) => (
-          <button
-            key={value}
-            type="button"
-            role="radio"
-            aria-checked={filter.range === value}
-            className={`${styles.option} ${filter.range === value ? styles.selected : ''}`}
-            onClick={() => setFilter({ range: value })}
-          >
-            {label}
-          </button>
-        ))}
+      <div className={styles.presets}>
+        <div className={styles.segmented} role="radiogroup" aria-label="Date range">
+          {PRESETS.map(({ value, label }) => (
+            <button
+              key={value}
+              type="button"
+              role="radio"
+              aria-checked={filter.range === value}
+              className={`${styles.option} ${filter.range === value ? styles.selected : ''}`}
+              onClick={() => setFilter({ range: value })}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
       </div>
       {filter.range === 'custom' && (
         <div className={styles.dates}>
-          <input
+          <Input
             type="date"
-            className={styles.control}
+            className={styles.date}
             aria-label="From date"
             value={filter.from}
             max={filter.to || undefined}
             onChange={(event) => setFilter({ from: event.target.value })}
           />
-          –
-          <input
+          <span className={styles.dash} aria-hidden="true">
+            –
+          </span>
+          <Input
             type="date"
-            className={styles.control}
+            className={styles.date}
             aria-label="To date"
             value={filter.to}
             min={filter.from || undefined}
@@ -51,19 +56,21 @@ export function FilterBar() {
           />
         </div>
       )}
-      <select
-        className={styles.control}
-        aria-label="Channel"
-        value={filter.channel}
-        onChange={(event) => setFilter({ channel: event.target.value as Channel | '' })}
-      >
-        <option value="">All channels</option>
-        {CHANNELS.map((channel) => (
-          <option key={channel} value={channel}>
-            {CHANNEL_LABELS[channel]}
-          </option>
-        ))}
-      </select>
+      <div className={styles.channel}>
+        <Select
+          className={styles.channelSelect}
+          aria-label="Channel"
+          value={filter.channel}
+          onChange={(event) => setFilter({ channel: event.target.value as Channel | '' })}
+        >
+          <option value="">All channels</option>
+          {CHANNELS.map((channel) => (
+            <option key={channel} value={channel}>
+              {CHANNEL_LABELS[channel]}
+            </option>
+          ))}
+        </Select>
+      </div>
     </div>
   )
 }

@@ -42,6 +42,7 @@ export type SimulationChatRequest = {
   supportAgentId: number
   message: string
   history: ChatMessage[]
+  apiKeyId: number
 }
 
 export type SimulationChatResponse = {
@@ -63,6 +64,7 @@ export type AnalysisRequestSummary = {
 }
 
 export type AnalysisRequestDetail = AnalysisRequestSummary & {
+  apiKeyMasked: string | null
   messages: ChatMessage[]
 }
 
@@ -105,4 +107,35 @@ export type AnalysisStatistics = {
   dailyStatistics: DailyStatistics[]
   channelStatistics: ChannelStatistics[]
   scoreDistribution: ScoreRangeStatistics[]
+}
+
+export type ApiKey = {
+  id: number
+  name: string
+  maskedKey: string
+  createdAt: string
+  rotatedAt: string | null
+  lastUsedAt: string | null
+}
+
+export type CreatedApiKeyResponse = {
+  apiKey: ApiKey
+  secret: string
+}
+
+export type EmailDelivery = 'SMTP' | 'LOG'
+
+export type Account = {
+  username: string
+  notificationEmail: string | null
+  pendingNotificationEmail: string | null
+  notificationsEnabled: boolean
+  alertThreshold: number
+  emailDelivery: EmailDelivery
+}
+
+export type VerificationSentResponse = {
+  pendingNotificationEmail: string
+  expiresAt: string
+  emailDelivery: EmailDelivery
 }

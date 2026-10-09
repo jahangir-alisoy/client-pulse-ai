@@ -1,6 +1,7 @@
 import { X } from 'lucide-react'
 import { useEffect, useRef, type ReactNode } from 'react'
 import { createPortal } from 'react-dom'
+import { useBodyScrollLock } from '../lib/useBodyScrollLock'
 import { Button } from './Button'
 import styles from './Drawer.module.css'
 
@@ -12,6 +13,7 @@ type DrawerProps = {
 
 export function Drawer({ title, onClose, children }: DrawerProps) {
   const closeButton = useRef<HTMLButtonElement>(null)
+  useBodyScrollLock(true)
 
   useEffect(() => {
     closeButton.current?.focus()

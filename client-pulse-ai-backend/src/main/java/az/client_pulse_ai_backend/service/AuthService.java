@@ -19,10 +19,12 @@ public class AuthService {
 	private final AuthenticationManager authenticationManager;
 	private final UserRepository userRepository;
 	private final JwtService jwtService;
+	private final ApiKeyService apiKeyService;
 
 	public TokenResponse login(LoginRequest request) {
 		authenticationManager.authenticate(
 				UsernamePasswordAuthenticationToken.unauthenticated(request.username(), request.password()));
+		apiKeyService.provisionDefaultKey(request.username());
 		return issueTokens(request.username());
 	}
 
@@ -33,7 +35,7 @@ public class AuthService {
 		return issueTokens(username);
 	}
 
-	private TokenResponse issueTokens(String username) {
+	public TokenResponse issueTokens(String username) {
 		return new TokenResponse(jwtService.generateAccessToken(username), jwtService.generateRefreshToken(username));
 	}
 

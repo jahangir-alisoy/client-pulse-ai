@@ -31,8 +31,28 @@
   --overlay: rgba(11, 11, 11, 0.24);
   --shadow-overlay: 0 16px 40px rgba(11, 11, 11, 0.14), 0 2px 8px rgba(11, 11, 11, 0.06);
 
+  --danger: #c93636;
+  --danger-hover: #b02c2c;
+  --on-danger: #ffffff;
+
+  --tone-info: #2a78d6;
+  --tone-success: #0b8f0b;
+  --tone-warning: #b7790a;
+  --tone-error: #c93636;
+
+  --skeleton: rgba(11, 11, 11, 0.06);
+  --tooltip-bg: #0b0b0b;
+  --tooltip-text: #ffffff;
+  --focus-ring: 0 0 0 3px color-mix(in srgb, var(--accent) 22%, transparent);
+  --shadow-card: 0 1px 2px rgba(11, 11, 11, 0.04);
+  --shadow-raised: 0 4px 16px rgba(11, 11, 11, 0.08), 0 1px 3px rgba(11, 11, 11, 0.05);
+
   --radius-sm: 6px;
   --radius: 8px;
+  --radius-lg: 12px;
+
+  --ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --topbar-height: 56px;
 
   --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   --font-mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
@@ -67,6 +87,21 @@
 
     --overlay: rgba(0, 0, 0, 0.5);
     --shadow-overlay: 0 16px 40px rgba(0, 0, 0, 0.5), 0 2px 8px rgba(0, 0, 0, 0.3);
+
+    --danger: #d64545;
+    --danger-hover: #e25a5a;
+    --on-danger: #ffffff;
+
+    --tone-info: #5a9cec;
+    --tone-success: #3fbf3f;
+    --tone-warning: #f2b13a;
+    --tone-error: #ec6a6a;
+
+    --skeleton: rgba(255, 255, 255, 0.07);
+    --tooltip-bg: #f5f5f3;
+    --tooltip-text: #0b0b0b;
+    --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.3);
+    --shadow-raised: 0 4px 16px rgba(0, 0, 0, 0.45), 0 1px 3px rgba(0, 0, 0, 0.3);
   }
 }
 
@@ -98,4 +133,19 @@
 
   --overlay: rgba(0, 0, 0, 0.5);
   --shadow-overlay: 0 16px 40px rgba(0, 0, 0, 0.5), 0 2px 8px rgba(0, 0, 0, 0.3);
+
+  --danger: #d64545;
+  --danger-hover: #e25a5a;
+  --on-danger: #ffffff;
+
+  --tone-info: #5a9cec;
+  --tone-success: #3fbf3f;
+  --tone-warning: #f2b13a;
+  --tone-error: #ec6a6a;
+
+  --skeleton: rgba(255, 255, 255, 0.07);
+  --tooltip-bg: #f5f5f3;
+  --tooltip-text: #0b0b0b;
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-raised: 0 4px 16px rgba(0, 0, 0, 0.45), 0 1px 3px rgba(0, 0, 0, 0.3);
 }
